@@ -61,6 +61,9 @@ void Pokemon::setDefensa(int defensa){
 void Pokemon::setVelocidad(int velocidad){
 	this->velocidad=velocidad;
 }
+void Pokemon::setMoves(vector<Move*> moves){
+	this->moves=moves;
+}
 string Pokemon::toString(){
 	stringstream ss;
 	ss<<"Pokemon:"<<nombre<<endl;

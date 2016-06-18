@@ -75,6 +75,7 @@ int main(int argc, char const *argv[])
 				int elegido=getch();
 				if((elegido-48)<pokemons.size()&&(elegido-48)>=0){
 					player=Pokemon(pokemons[elegido-48]);
+					pokemons.erase(pokemons.begin()+(elegido-48));
 					mvprintw(20,(y/2)-20,"Usted a elegido a %s como su combatiente (presione cualquier tecla para continuar)                                                             ",pokemons[elegido-48]->getNombre().c_str());	
 					mvprintw(21,(y/2)-26,"                                                                                  ");
 					revision=0;
@@ -87,6 +88,8 @@ int main(int argc, char const *argv[])
 				attroff(COLOR_PAIR(8));
 			}
 			vector<Move*> moves=generar_moves(player.getTipo());
+			vector<Move*> playerMoves;
+			playerMoves.push_back(new Ataque("Takle","Normal",100,15,"ataque simple que baja la vida del oponente con respecto a tu poder de ataque"));
 			attron(COLOR_PAIR(2));
 			limpiar();
 			attroff(COLOR_PAIR(2));
@@ -113,11 +116,11 @@ int main(int argc, char const *argv[])
 				mvprintw(21,(y/2)-26,"(presione la tecla del numero del movimiento que desea elegir de la lista)");
 				int elegido=getch();
 				if((elegido-48)<moves.size()&&(elegido-48)>=0){
-					player.getMoves().push_back(moves[elegido-48]);
+					playerMoves.push_back(moves[elegido-48]);
 					mvprintw(20,(y/2)-20,"Usted a elegido %s como nuevo movimiento para su pokemon                                                             ",moves[elegido-48]->getNombre().c_str());	
 					mvprintw(21,(y/2)-26,"                                                                                  ");
 					moves.erase(moves.begin()+(elegido-48));
-					if(player.getMoves().size()==4){
+					if(playerMoves.size()==4){
 						mvprintw(20,(y/2)-20,"                                                                                  ");
 						mvprintw(20,(y/2)-20,"Usted ya ha elegido los movimiento para su pokemon");
 						revision=1;
@@ -130,6 +133,8 @@ int main(int argc, char const *argv[])
 				}
 				attroff(COLOR_PAIR(8));
 			}
+			player.setMoves(playerMoves);
+
 			refresh();
 		}else if (enter==98)
 		{
@@ -170,8 +175,6 @@ vector<Pokemon*> generar_pokemons(){
 	vector<Pokemon*> opciones;
 	vector<Move*> moves1;
 	vector<Move*> moves2;
-	moves1.push_back(new Ataque("Takle","Normal",100,15,"ataque simple que baja la vida del oponente con respecto a tu poder de ataque"));
-	moves2.push_back(new Ataque("Takle","Normal",100,15,"ataque simple que baja la vida del oponente con respecto a tu poder de ataque"));
 	opciones.push_back(new Pokemon("Charmeleon","Fuego",50,17,10,80,moves1));
 	opciones.push_back(new Pokemon("Frogadier","Agua",50,15,11,90,moves2));
 	return opciones;

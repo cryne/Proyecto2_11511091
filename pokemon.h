@@ -26,6 +26,7 @@ public:
 	void setAtaque(int);
 	void setDefensa(int);
 	void setVelocidad(int);
+	void setMoves(vector<Move*>);
 	string toString();
 	
 };
