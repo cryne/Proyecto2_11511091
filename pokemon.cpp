@@ -17,6 +17,20 @@ Pokemon::Pokemon(string nombre,string tipo,int vida,int ataque,int defensa,int v
 	this->velocidad=velocidad;
 	this->moves=moves;
 }
+Pokemon::Pokemon(){
+}
+Pokemon::Pokemon(const Pokemon* r){
+	this->nombre=r->nombre;
+	this->tipo=r->tipo;
+	this->vida=r->vida;
+	this->ataque=r->ataque;
+	this->defensa=r->defensa;
+	this->velocidad=r->velocidad;
+	this->moves=r->moves;
+}
+string Pokemon::getNombre(){
+	return nombre;
+}
 int Pokemon::getVida(){
 	return vida;
 }

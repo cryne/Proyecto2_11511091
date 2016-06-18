@@ -13,6 +13,9 @@ Move::Move(string nombre,string tipo,int precision,int usos,string descripcion){
 	this->usos=usos;
 	this->descripcion=descripcion;
 }
+string Move::getNombre(){
+	return nombre;
+}
 int Move::getPrecision(){
 	return precision;
 }
@@ -31,10 +34,10 @@ void Move::setUsos(int usos){
 void Move::setPrecision(int precision){
 	this->precision=precision;
 }
-void Move::afecto(int& vida1,int& ataque1,int defensa1,int& velocidad1,int& vida2,int& ataque2,int& defensa2,int& velocidad2,string tipo){
+void Move::efecto(int& vida1,int& ataque1,int& defensa1,int& velocidad1,int& vida2,int& ataque2,int& defensa2,int& velocidad2,int debil){
 }
 string Move::toString(){
 	stringstream ss;
-	ss<<nombre<<endl;
+	ss<<nombre<<" -"<<tipo<<"-";
 	return ss.str();
 }

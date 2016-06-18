@@ -13,6 +13,9 @@ class Pokemon
 	vector<Move*> moves;
 public:
 	Pokemon(string,string,int,int,int,int,vector<Move*>);
+	Pokemon();
+	Pokemon(const Pokemon*);
+	string getNombre();
 	int getVida();
 	int getAtaque();
 	int getDefensa();

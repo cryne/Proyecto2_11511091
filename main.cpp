@@ -1,13 +1,19 @@
 #include <ncurses.h>
 #include "pokemon.h"
 #include "move.h"
+#include "ataque.h"
+#include "proteccion.h"
+#include "recover.h"
 #include <vector>
+#include <string>
+using std::string;
 using std::vector;
 void limpiar();
 void charmeleon();
 void frogadier();
 void pokebola();
 vector<Pokemon*> generar_pokemons();
+vector<Move*> generar_moves(string);
 int main(int argc, char const *argv[])
 {
 	initscr();
@@ -24,7 +30,7 @@ int main(int argc, char const *argv[])
 	attron(COLOR_PAIR(2));
 	limpiar();
 	attroff(COLOR_PAIR(2));
-	int s,enter;
+	int s,enter,avanzar;
 	printw("Presione cualquier tecla diferente ESC para iniciar el programa");
 	while((s=getch()!=27)){
 		attron(COLOR_PAIR(2));
@@ -47,10 +53,83 @@ int main(int argc, char const *argv[])
 		attroff(COLOR_PAIR(8));
 		enter=getch();
 		if(enter==10){
+			vector<Pokemon*> pokemons=generar_pokemons();
+			attron(COLOR_PAIR(2));
+			limpiar();
+			attroff(COLOR_PAIR(2));
+			pokebola();
+			int revision=1;
+			Pokemon player;
+			while(revision==1){
+				attron(COLOR_PAIR(8));
+				mvprintw(20,(y/2)-20,"Que pokemon desea elegir como su combatiente?");
+				mvprintw(21,(y/2)-26,"(presione la tecla del numero del pokemon que desea elegir de la lista)");
+				for (int i = 0; i < pokemons.size(); ++i)
+				{
+					mvprintw(22+(i)*5,(y/2)-8,"%d-%s",i,pokemons[i]->getNombre().c_str());
+					mvprintw(23+(i)*5,(y/2)-8,"-Vida:%d",pokemons[i]->getVida());
+					mvprintw(24+(i)*5,(y/2)-8,"-Ataque:%d",pokemons[i]->getAtaque());
+					mvprintw(25+(i)*5,(y/2)-8,"-Defensa:%d",pokemons[i]->getDefensa());
+					mvprintw(26+(i)*5,(y/2)-8,"-Velocidad:%d",pokemons[i]->getVelocidad());
+				}
+				int elegido=getch();
+				if((elegido-48)<pokemons.size()&&(elegido-48)>=0){
+					player=Pokemon(pokemons[elegido-48]);
+					mvprintw(20,(y/2)-20,"Usted a elegido a %s como su combatiente (presione cualquier tecla para continuar)                                                             ",pokemons[elegido-48]->getNombre().c_str());	
+					mvprintw(21,(y/2)-26,"                                                                                  ");
+					revision=0;
+					avanzar=getch();
+				}else{
+					mvprintw(20,(y/2)-20,"El numero que ingreso no existe en la lista como opcion(presione cualquier tecla para continuar)                                                             ");
+					mvprintw(21,(y/2)-26,"                                                                                  ");
+					avanzar=getch();
+				}
+				attroff(COLOR_PAIR(8));
+			}
+			vector<Move*> moves=generar_moves(player.getTipo());
+			attron(COLOR_PAIR(2));
+			limpiar();
+			attroff(COLOR_PAIR(2));
+			pokebola();
 			attron(COLOR_PAIR(8));
-			mvprintw(20,(y/2)-16,"hola");
-			attroff(COLOR_PAIR(8));
-			s=getch();
+			mvprintw(0,(y/2)-20,"(presione cualquier tecla para continuar)");
+			mvprintw(20,(y/2)-20,"ahora se le mostrara la lista de movimientos que podra elegir");
+			mvprintw(21,(y/2)-20,"por defecto su pokemon ya conoce Takle de ataque solo podra conocer 3 mas");
+			avanzar=getch();
+			attroff(COLOR_PAIR(8));	
+			while(revision==0){
+				attron(COLOR_PAIR(2));
+				limpiar();
+				mvprintw(0,(y/2)-20,"(presione cualquier tecla para continuar)");
+				attroff(COLOR_PAIR(2));
+				pokebola();
+				attron(COLOR_PAIR(8));
+				for (int i = 0; i < moves.size(); ++i)
+				{	
+					mvprintw(22+(i)*2,(y/2)-8,"%d-%s",i,moves[i]->toString().c_str());
+					mvprintw(23+(i)*2,(y/2)-8,"   Precision:%d  Usos:%d",moves[i]->getPrecision(),moves[i]->getUsos());
+				}
+				mvprintw(20,(y/2)-20,"Que movimiento desea elegir para que su pokemon lo aprenda?");
+				mvprintw(21,(y/2)-26,"(presione la tecla del numero del movimiento que desea elegir de la lista)");
+				int elegido=getch();
+				if((elegido-48)<moves.size()&&(elegido-48)>=0){
+					player.getMoves().push_back(moves[elegido-48]);
+					mvprintw(20,(y/2)-20,"Usted a elegido %s como nuevo movimiento para su pokemon                                                             ",moves[elegido-48]->getNombre().c_str());	
+					mvprintw(21,(y/2)-26,"                                                                                  ");
+					moves.erase(moves.begin()+(elegido-48));
+					if(player.getMoves().size()==4){
+						mvprintw(20,(y/2)-20,"                                                                                  ");
+						mvprintw(20,(y/2)-20,"Usted ya ha elegido los movimiento para su pokemon");
+						revision=1;
+					}
+					avanzar=getch();
+				}else{
+					mvprintw(20,(y/2)-20,"El numero que ingreso no existe en la lista como opcion                                                             ");
+					mvprintw(21,(y/2)-26,"                                                                                  ");
+					avanzar=getch();
+				}
+				attroff(COLOR_PAIR(8));
+			}
 			refresh();
 		}else if (enter==98)
 		{
@@ -62,9 +141,40 @@ int main(int argc, char const *argv[])
 	endwin();
 	return 0;
 }
+vector<Move*> generar_moves(string tipo){
+	vector<Move*> moves;
+	if(tipo=="Agua"){
+		moves.push_back(new Ataque("Rock tomb","Roca",90,10,"ataque que tumba rocas sobre el oponente"));
+		moves.push_back(new Ataque("Aerial ace","Volador",100,8,"ataque aereo que nunca falla"));
+		moves.push_back(new Ataque("Water pulse","Agua",99,5,"ataque que causa una onda acuatica que golpea al oponente"));
+		moves.push_back(new Proteccion("Protec","Normal",50,5,"movimiento que protege de todo ataque al usuario"));
+		moves.push_back(new Recover("Recover","Normal",50,5,"movimientoque recupera vida del usuario(falla si el usuario no tiene dano alguno)"));
+	}else if(tipo=="Fuego"){
+		moves.push_back(new Ataque("Thunder puch","Electrico",95,8,"ataque que causa una descarga electrica de un golpe"));
+		moves.push_back(new Ataque("Rock tomb","Roca",90,10,"ataque que tumba rocas sobre el oponente"));
+		moves.push_back(new Ataque("Aerial ace","Volador",100,8,"ataque aereo que nunca falla"));
+		moves.push_back(new Ataque("Flamethrower","Fuego",99,5,"ataque que lanza fuego al oponente"));
+		moves.push_back(new Proteccion("Protec","Normal",50,5,"movimiento que protege de todo ataque al usuario"));
+		moves.push_back(new Recover("Recover","Normal",50,5,"movimientoque recupera vida del usuario(falla si el usuario no tiene dano alguno)"));
+	}else{
+		moves.push_back(new Ataque("Thunder puch","Electrico",95,8,"ataque que causa una descarga electrica de un golpe"));
+		moves.push_back(new Ataque("Rock tomb","Roca",90,10,"ataque que tumba rocas sobre el oponente"));
+		moves.push_back(new Ataque("Aerial ace","Volador",100,8,"ataque aereo que nunca falla"));
+		moves.push_back(new Ataque("Leaf blade","Hoja",99,5,"ataque lanza hojas afiladas contra el oponente"));
+		moves.push_back(new Proteccion("Protec","Normal",50,5,"movimiento que protege de todo ataque al usuario"));
+		moves.push_back(new Recover("Recover","Normal",50,5,"movimientoque recupera vida del usuario(falla si el usuario no tiene dano alguno)"));
+	}
+	return moves;
+}
 vector<Pokemon*> generar_pokemons(){
 	vector<Pokemon*> opciones;
-	opciones.push_back(new Pokemon("Charmeleon","Fuego",400,64,58,80,));
+	vector<Move*> moves1;
+	vector<Move*> moves2;
+	moves1.push_back(new Ataque("Takle","Normal",100,15,"ataque simple que baja la vida del oponente con respecto a tu poder de ataque"));
+	moves2.push_back(new Ataque("Takle","Normal",100,15,"ataque simple que baja la vida del oponente con respecto a tu poder de ataque"));
+	opciones.push_back(new Pokemon("Charmeleon","Fuego",50,17,10,80,moves1));
+	opciones.push_back(new Pokemon("Frogadier","Agua",50,15,11,90,moves2));
+	return opciones;
 }
 void pokebola(){
 	int x,y;

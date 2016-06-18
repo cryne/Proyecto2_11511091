@@ -10,12 +10,13 @@ class Move
 	string descripcion;
 public:
 	Move(string,string,int,int,string);
+	string getNombre();
 	int getPrecision();
 	int getUsos();
 	string getTipo();
 	string getDescripcion();
 	void setUsos(int);
 	void setPrecision(int);
-	virtual void afecto(int&,int&,int&,int&,int&,int&,int&,int&,string);
-	string toString();
+	virtual void efecto(int&,int&,int&,int&,int&,int&,int&,int&,int);
+	virtual string toString();
 };
