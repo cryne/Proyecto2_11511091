@@ -17,6 +17,6 @@ public:
 	string getDescripcion();
 	void setUsos(int);
 	void setPrecision(int);
-	virtual void efecto(int&,int&,int&,int&,int&,int&,int&,int&,int);
+	virtual int efecto(int,int,int,int,int);
 	virtual string toString();
 };

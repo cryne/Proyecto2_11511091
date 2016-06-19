@@ -7,6 +7,6 @@ class Proteccion:public Move
 {
 public:
 	Proteccion(string,string,int,int,string);
-	void efecto(int&,int&,int&,int&,int&,int&,int&,int&,int);
+	int efecto(int,int,int,int,int);
 	string toString();	
 };

@@ -7,6 +7,6 @@ class Recover:public Move
 {
 public:
 	Recover(string,string,int,int,string);
-	void efecto(int&,int&,int&,int&,int&,int&,int&,int&,int);
+	int efecto(int,int,int,int,int);
 	string toString();	
 };

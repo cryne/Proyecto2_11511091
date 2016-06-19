@@ -34,7 +34,7 @@ void Move::setUsos(int usos){
 void Move::setPrecision(int precision){
 	this->precision=precision;
 }
-void Move::efecto(int& vida1,int& ataque1,int& defensa1,int& velocidad1,int& vida2,int& ataque2,int& defensa2,int& velocidad2,int debil){
+int Move::efecto(int vida1,int ataque1,int vida2,int defensa2,int debil){
 }
 string Move::toString(){
 	stringstream ss;
