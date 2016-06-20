@@ -497,11 +497,17 @@ void Combate(Pokemon player,Pokemon cpu){
 				avanzar=getch();
 				if(player.getMoves()[elegido]->getNombre()=="Recover"){
 					if((rand()%100)<=player.getMoves()[elegido]->getPrecision()){
+						if(player.getVida()!=50){
+								attron(COLOR_PAIR(8));
+								mvprintw(20,(y/2)-30,"recuperas parte de vida                                                          ");
+								attroff(COLOR_PAIR(8));
+						}else{
+								attron(COLOR_PAIR(8));
+								mvprintw(20,(y/2)-30,"Pero fallo                                                           ");
+								attroff(COLOR_PAIR(8));
+						}
 						player.setVida(player.getMoves()[elegido]->efecto(player.getVida(),0,0,0,0));
 						vida(player,cpu);
-						attron(COLOR_PAIR(8));
-						mvprintw(20,(y/2)-30,"recuperas parte de vida                                                          ");
-						attroff(COLOR_PAIR(8));
 						avanzar=getch();
 					}else{
 						attron(COLOR_PAIR(8));
@@ -534,11 +540,17 @@ void Combate(Pokemon player,Pokemon cpu){
 				avanzar=getch();
 				if(cpu.getMoves()[elegido2]->getNombre()=="Recover"){
 					if((rand()%100)<=cpu.getMoves()[elegido2]->getPrecision()){
+						if(cpu.getVida()!=50){
+								attron(COLOR_PAIR(8));
+								mvprintw(20,(y/2)-30,"el oponente recupera parte de vida                                                          ");
+								attroff(COLOR_PAIR(8));
+						}else{
+								attron(COLOR_PAIR(8));
+								mvprintw(20,(y/2)-30,"Pero fallo                                                           ");
+								attroff(COLOR_PAIR(8));
+						}
 						cpu.setVida(cpu.getMoves()[elegido2]->efecto(cpu.getVida(),0,0,0,0));
 						vida(player,cpu);
-						attron(COLOR_PAIR(8));
-						mvprintw(20,(y/2)-30,"el oponente recupera parte de su vida                                                          ");
-						attroff(COLOR_PAIR(8));
 						avanzar=getch();
 					}else{
 						attron(COLOR_PAIR(8));
@@ -573,11 +585,17 @@ void Combate(Pokemon player,Pokemon cpu){
 					avanzar=getch();
 					if(player.getMoves()[elegido]->getNombre()=="Recover"){
 						if((rand()%100)<=player.getMoves()[elegido]->getPrecision()){
+							if(player.getVida()!=50){
+								attron(COLOR_PAIR(8));
+								mvprintw(20,(y/2)-30,"recuperas parte de vida                                                          ");
+								attroff(COLOR_PAIR(8));
+							}else{
+								attron(COLOR_PAIR(8));
+								mvprintw(20,(y/2)-30,"Pero fallo                                                           ");
+								attroff(COLOR_PAIR(8));
+							}
 							player.setVida(player.getMoves()[elegido]->efecto(player.getVida(),0,0,0,0));
 							vida(player,cpu);
-							attron(COLOR_PAIR(8));
-							mvprintw(20,(y/2)-30,"recuperas parte de vida                                                          ");
-							attroff(COLOR_PAIR(8));
 							avanzar=getch();
 						}else{
 							attron(COLOR_PAIR(8));
@@ -606,16 +624,28 @@ void Combate(Pokemon player,Pokemon cpu){
 			}else{
 				attron(COLOR_PAIR(8));
 				if(tiene2==false){
+					attron(COLOR_PAIR(8));
 					mvprintw(20,(y/2)-30,"%s ha usado %s                                                      ",cpu.getNombre().c_str(),cpu.getMoves()[elegido2]->getNombre().c_str());
+					attroff(COLOR_PAIR(8));
 					avanzar=getch();
 					if(cpu.getMoves()[elegido2]->getNombre()=="Recover"){
 						if((rand()%100)<=cpu.getMoves()[elegido2]->getPrecision()){
+							if(player.getVida()!=50){
+								attron(COLOR_PAIR(8));
+								mvprintw(20,(y/2)-30,"el oponente recupera parte de vida                                                          ");
+								attroff(COLOR_PAIR(8));
+							}else{
+								attron(COLOR_PAIR(8));
+								mvprintw(20,(y/2)-30,"Pero fallo                                                           ");
+								attroff(COLOR_PAIR(8));
+							}
 							cpu.setVida(cpu.getMoves()[elegido2]->efecto(cpu.getVida(),0,0,0,0));
 							vida(player,cpu);
-							mvprintw(20,(y/2)-30,"el oponente recupera parte de su vida                                                          ");
 							avanzar=getch();
 						}else{
+							attron(COLOR_PAIR(8));
 							mvprintw(20,(y/2)-30,"Pero fallo                                                           ");
+							attroff(COLOR_PAIR(8));
 							avanzar=getch();
 						}
 					}else{
@@ -623,13 +653,17 @@ void Combate(Pokemon player,Pokemon cpu){
 							int debil=efectividad(player.getTipo(),cpu.getMoves()[elegido2]->getTipo());
 							player.setVida(cpu.getMoves()[elegido2]->efecto(0,cpu.getAtaque(),player.getVida(),player.getDefensa(),debil));
 						}else{
+							attron(COLOR_PAIR(8));
 							mvprintw(20,(y/2)-30,"Pero fallo                                                           ");
+							attroff(COLOR_PAIR(8));
 						}
 						vida(player,cpu);
 						avanzar=getch();
 					}
 				}else{
+					attron(COLOR_PAIR(8));
 					mvprintw(20,(y/2)-30,"%s ha usado Struggle                                                      ",cpu.getNombre().c_str());
+					attroff(COLOR_PAIR(8));
 					player.setVida(player.getVida()-5);
 					cpu.setVida(cpu.getVida()-8);
 					vida(player,cpu);
@@ -716,19 +750,16 @@ void Combate(Pokemon player,Pokemon cpu){
 }
 vector<Move*> oponent_moves(string tipo){
 	vector<Move*> moves;
+	moves.push_back(new Proteccion("Protec","Normal",50,5,"movimiento que protege de todo ataque al usuario"));
+	moves.push_back(new Recover("Recover","Normal",50,5,"movimientoque recupera vida del usuario(falla si el usuario no tiene dano alguno)"));
 	if(tipo=="Agua"){
-		moves.push_back(new Proteccion("Protec","Normal",50,5,"movimiento que protege de todo ataque al usuario"));
-		moves.push_back(new Recover("Recover","Normal",50,5,"movimientoque recupera vida del usuario(falla si el usuario no tiene dano alguno)"));
 		moves.push_back(new Ataque("Aerial ace","Volador",100,8,"ataque aereo que nunca falla"));
 		moves.push_back(new Ataque("Water pulse","Agua",99,5,"ataque que causa una onda acuatica que golpea al oponente"));
 	}else if(tipo=="Fuego"){
-		moves.push_back(new Proteccion("Protec","Normal",50,5,"movimiento que protege de todo ataque al usuario"));
-		moves.push_back(new Recover("Recover","Normal",50,5,"movimientoque recupera vida del usuario(falla si el usuario no tiene dano alguno)"));
 		moves.push_back(new Ataque("Thunder puch","Electrico",95,8,"ataque que causa una descarga electrica de un golpe"));
 		moves.push_back(new Ataque("Flamethrower","Fuego",99,5,"ataque que lanza fuego al oponente"));
 	}else{
-		moves.push_back(new Proteccion("Protec","Normal",50,5,"movimiento que protege de todo ataque al usuario"));
-		moves.push_back(new Recover("Recover","Normal",50,5,"movimientoque recupera vida del usuario(falla si el usuario no tiene dano alguno)"));
+		
 		moves.push_back(new Ataque("Rock tomb","Roca",90,10,"ataque que tumba rocas sobre el oponente"));
 		moves.push_back(new Ataque("Leaf blade","Hoja",99,5,"ataque lanza hojas afiladas contra el oponente"));
 	}
@@ -736,30 +767,21 @@ vector<Move*> oponent_moves(string tipo){
 }
 vector<Move*> generar_moves(string tipo){
 	vector<Move*> moves;
+	moves.push_back(new Ataque("Takle","Normal",100,15,"ataque simple que baja la vida del oponente con respecto a tu poder de ataque"));
 	if(tipo=="Agua"){
-		moves.push_back(new Ataque("Takle","Normal",100,15,"ataque simple que baja la vida del oponente con respecto a tu poder de ataque"));	
-		moves.push_back(new Ataque("Rock tomb","Roca",90,10,"ataque que tumba rocas sobre el oponente"));
-		moves.push_back(new Ataque("Aerial ace","Volador",100,8,"ataque aereo que nunca falla"));
 		moves.push_back(new Ataque("Water pulse","Agua",99,5,"ataque que causa una onda acuatica que golpea al oponente"));
-		moves.push_back(new Proteccion("Protec","Normal",50,5,"movimiento que protege de todo ataque al usuario"));
-		moves.push_back(new Recover("Recover","Normal",50,5,"movimientoque recupera vida del usuario(falla si el usuario no tiene dano alguno)"));
 	}else if(tipo=="Fuego"){
-		moves.push_back(new Ataque("Takle","Normal",100,11,"ataque simple que baja la vida del oponente con respecto a tu poder de ataque"));		
 		moves.push_back(new Ataque("Thunder puch","Electrico",95,8,"ataque que causa una descarga electrica de un golpe"));
-		moves.push_back(new Ataque("Rock tomb","Roca",90,10,"ataque que tumba rocas sobre el oponente"));
-		moves.push_back(new Ataque("Aerial ace","Volador",100,8,"ataque aereo que nunca falla"));
 		moves.push_back(new Ataque("Flamethrower","Fuego",99,5,"ataque que lanza fuego al oponente"));
-		moves.push_back(new Proteccion("Protec","Normal",50,5,"movimiento que protege de todo ataque al usuario"));
-		moves.push_back(new Recover("Recover","Normal",50,5,"movimientoque recupera vida del usuario(falla si el usuario no tiene dano alguno)"));
 	}else{
-		moves.push_back(new Ataque("Takle","Normal",100,15,"ataque simple que baja la vida del oponente con respecto a tu poder de ataque"));	
 		moves.push_back(new Ataque("Thunder puch","Electrico",95,8,"ataque que causa una descarga electrica de un golpe"));
-		moves.push_back(new Ataque("Rock tomb","Roca",90,10,"ataque que tumba rocas sobre el oponente"));
-		moves.push_back(new Ataque("Aerial ace","Volador",100,8,"ataque aereo que nunca falla"));
 		moves.push_back(new Ataque("Leaf blade","Hoja",99,5,"ataque lanza hojas afiladas contra el oponente"));
-		moves.push_back(new Proteccion("Protec","Normal",50,5,"movimiento que protege de todo ataque al usuario"));
-		moves.push_back(new Recover("Recover","Normal",50,5,"movimientoque recupera vida del usuario(falla si el usuario no tiene dano alguno)"));
 	}
+	moves.push_back(new Ataque("Rock tomb","Roca",90,10,"ataque que tumba rocas sobre el oponente"));	
+	moves.push_back(new Ataque("Aerial ace","Volador",100,8,"ataque aereo que nunca falla"));
+	moves.push_back(new Proteccion("Protec","Normal",50,5,"movimiento que protege de todo ataque al usuario"));
+	moves.push_back(new Recover("Recover","Normal",50,5,"movimientoque recupera vida del usuario(falla si el usuario no tiene dano alguno)"));
+	
 	return moves;
 }
 vector<Pokemon*> generar_pokemons(){
