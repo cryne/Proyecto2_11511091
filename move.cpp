@@ -1,20 +1,22 @@
 #include <string>
 #include <sstream>
 #include <iostream>
+#include <cstring>
 #include "move.h"
 using std::string;
 using std::stringstream;
 using std::endl;
 
 Move::Move(string nombre,string tipo,int precision,int usos,string descripcion){
-	this->nombre=nombre;
-	this->tipo=tipo;
+	strcpy(this->nombre,nombre.c_str());
+	strcpy(this->tipo,tipo.c_str());
 	this->precision=precision;
 	this->usos=usos;
-	this->descripcion=descripcion;
+	strcpy(this->descripcion,descripcion.c_str());
 }
 string Move::getNombre(){
-	return nombre;
+	string nueva(nombre);
+	return nueva;
 }
 int Move::getPrecision(){
 	return precision;
@@ -23,10 +25,12 @@ int Move::getUsos(){
 	return usos;
 }
 string Move::getTipo(){
-	return tipo;
+	string nueva(tipo);
+	return nueva;
 }
 string Move::getDescripcion(){
-	return descripcion;
+	string nueva(descripcion);
+	return nueva;
 }
 void Move::setUsos(int usos){
 	this->usos=usos;

@@ -4,10 +4,10 @@ using std::string;
 
 class Move
 {
-	string nombre;
-	string tipo;
+	char* nombre=new char(15);
+	char* tipo=new char(15);
 	int precision,usos;
-	string descripcion;
+	char* descripcion=new char(50);
 public:
 	Move(string,string,int,int,string);
 	string getNombre();

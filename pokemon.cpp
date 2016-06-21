@@ -3,14 +3,15 @@
 #include "pokemon.h"
 #include <iostream>
 #include <vector>
+#include <cstring>
 using std::vector;
 using std::string;
 using std::stringstream;
 using std::endl;
 
 Pokemon::Pokemon(string nombre,string tipo,int vida,int ataque,int defensa,int velocidad,vector<Move*> moves){
-	this->nombre=nombre;
-	this->tipo=tipo;
+	strcpy(this->nombre,nombre.c_str());
+	strcpy(this->tipo,tipo.c_str());
 	this->vida=vida;
 	this->ataque=ataque;
 	this->defensa=defensa;
@@ -29,7 +30,8 @@ Pokemon::Pokemon(const Pokemon* r){
 	this->moves=r->moves;
 }
 string Pokemon::getNombre(){
-	return nombre;
+	string nueva(nombre);
+	return nueva;
 }
 int Pokemon::getVida(){
 	return vida;
@@ -44,7 +46,8 @@ int Pokemon::getVelocidad(){
 	return velocidad;
 }
 string Pokemon::getTipo(){
-	return tipo;
+	string nueva(tipo);
+	return nueva;
 }
 vector<Move*> Pokemon::getMoves(){
 	return moves;

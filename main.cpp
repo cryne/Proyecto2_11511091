@@ -5,12 +5,18 @@
 #include "proteccion.h"
 #include "recover.h"
 #include <vector>
+#include <fstream>
+#include <iostream>
 #include <string>
 #include <cstdlib>
 #include <ctime>
 using std::string;
 using std::vector;
-vector<Pokemon*> cargar();
+using std::ofstream;
+using std::ifstream;
+using std::ios;
+Pokemon cargar_p();
+Pokemon cargar_o();
 void guardar(Pokemon,Pokemon);
 int efectividad(string,string);
 void vida(Pokemon,Pokemon);
@@ -87,12 +93,13 @@ int main(int argc, char const *argv[])
 				if((elegido-48)<pokemons.size()&&(elegido-48)>=0){
 					player=Pokemon(pokemons[elegido-48]);
 					pokemons.erase(pokemons.begin()+(elegido-48));
-					mvprintw(20,(y/2)-20,"Usted a elegido a %s como su combatiente (presione cualquier tecla para continuar)                                                             ",player.getNombre().c_str());	
+					mvprintw(0,(y/2)-20,"(presione cualquier tecla para continuar)");
+					mvprintw(20,(y/2)-20,"Usted a elegido a %s como su combatiente                                                             ",player.getNombre().c_str());	
 					mvprintw(21,(y/2)-26,"                                                                                  ");
 					revision=0;
 					avanzar=getch();
 				}else{
-					mvprintw(20,(y/2)-20,"El numero que ingreso no existe en la lista como opcion(presione cualquier tecla para continuar)                                                             ");
+					mvprintw(20,(y/2)-20,"El numero que ingreso no existe en la lista como opcion                                                             ");
 					mvprintw(21,(y/2)-26,"                                                                                  ");
 					avanzar=getch();
 				}
@@ -151,18 +158,38 @@ int main(int argc, char const *argv[])
 		}else if (enter==98)
 		{
 			attron(COLOR_PAIR(8));
-			mvprintw(20,(y/2)-16,"adios");
+			mvprintw(20,(y/2)-25,"A continuacion se cargara la partida que fue guardada anteriormente");
 			attroff(COLOR_PAIR(8));
+			avanzar=getch();
+			Combate(cargar_p(),cargar_o());
 		}
 	}
 	endwin();
 	return 0;
 }
-vector<Pokemon*> cargar(){
-
+Pokemon cargar_p(){
+	Pokemon p;
+	ifstream input("player", ios::binary);
+	input.read(reinterpret_cast<char*>(&p), sizeof(p));
+	input.close();
+	mvprintw(0,0,"%d",p.getVida());
+	getch();
+	return p;
+}
+Pokemon cargar_o(){
+	Pokemon t;
+	ifstream inpu("cpu", ios::binary);
+	inpu.read(reinterpret_cast<char*>(&t), sizeof(t));
+	inpu.close();
+	return t;
 }
 void guardar(Pokemon player,Pokemon cpu){
-
+	ofstream output("player", ios::binary);
+	output.write(reinterpret_cast<char*>(&player), sizeof(player));
+	output.close();
+	ofstream outpu("cpu", ios::binary);
+	outpu.write(reinterpret_cast<char*>(&cpu), sizeof(cpu));
+	outpu.close();
 }
 int efectividad(string pokemon,string move){
 	int x,y;
@@ -743,7 +770,7 @@ void Combate(Pokemon player,Pokemon cpu){
 		attron(COLOR_PAIR(8));
 		guardar(player,cpu);
 		mvprintw(0,(y/2)-20,"(presione cualquier tecla para continuar)");
-		mvprintw(1,(y/2)-25,"EL combate ha sido guardado te esperamos para continuar ;)");
+		mvprintw(1,(y/2)-25,"EL combate ha sido guardado, te esperamos para continuar ;)");
 		attroff(COLOR_PAIR(8));
 		avanzar=getch();		
 	}

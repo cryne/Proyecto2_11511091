@@ -7,8 +7,8 @@ using std::string;
 
 class Pokemon
 {
-	string nombre;
-	string tipo;
+	char* nombre=new char(15);
+	char* tipo=new char(15);
 	int vida,ataque,defensa,velocidad;
 	vector<Move*> moves;
 public:
@@ -22,6 +22,7 @@ public:
 	int getVelocidad();
 	vector<Move*> getMoves();
 	string getTipo();
+	void setNombre(string);
 	void setVida(int);
 	void setAtaque(int);
 	void setDefensa(int);
