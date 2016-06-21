@@ -4,10 +4,10 @@ using std::string;
 
 class Move
 {
-	char* nombre=new char(15);
-	char* tipo=new char(15);
+	string nombre;
+	string tipo;
 	int precision,usos;
-	char* descripcion=new char(50);
+	string descripcion;
 public:
 	Move(string,string,int,int,string);
 	string getNombre();
@@ -15,6 +15,9 @@ public:
 	int getUsos();
 	string getTipo();
 	string getDescripcion();
+	void setNombre(string);
+	void setTipo(string);
+	void setDescripcion(string);
 	void setUsos(int);
 	void setPrecision(int);
 	virtual int efecto(int,int,int,int,int);

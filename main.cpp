@@ -10,14 +10,18 @@
 #include <string>
 #include <cstdlib>
 #include <ctime>
+#include <cstring>
+#include <stdlib.h>
+using std::fstream;
 using std::string;
 using std::vector;
 using std::ofstream;
 using std::ifstream;
 using std::ios;
-Pokemon cargar_p();
-Pokemon cargar_o();
-void guardar(Pokemon,Pokemon);
+using std::atoi;
+char** traspaso(Pokemon);
+int cargar(int);
+void guardar(int);
 int efectividad(string,string);
 void vida(Pokemon,Pokemon);
 void limpiar();
@@ -62,7 +66,7 @@ int main(int argc, char const *argv[])
 		mvprintw(22,(y/2)-16,"*-----------------------------*");
 		mvprintw(23,(y/2)-16,"|   (ENTER)Iniciar Combate    |");
 		mvprintw(24,(y/2)-16,"|                             |");
-		mvprintw(25,(y/2)-16,"|     (B)Cargar Combate       |");
+		mvprintw(25,(y/2)-16,"|      (B)Instrucciones       |");
 		mvprintw(26,(y/2)-16,"|                             |");
 		mvprintw(27,(y/2)-16,"|         (ESC)salir          |");
 		mvprintw(28,(y/2)-16,"|                             |");
@@ -157,39 +161,72 @@ int main(int argc, char const *argv[])
 			refresh();
 		}else if (enter==98)
 		{
+			attron(COLOR_PAIR(2));
+			limpiar();
+			attroff(COLOR_PAIR(2));
+			pokebola(5);
 			attron(COLOR_PAIR(8));
-			mvprintw(20,(y/2)-25,"A continuacion se cargara la partida que fue guardada anteriormente");
+			mvprintw(20,(y/2)-30,"Registro de victorias: Charmeleon:%d,Frogadier:%d                                                              ",cargar(1),cargar(2));
+			mvprintw(21,(y/2)-26,"                                                                                  ");
 			attroff(COLOR_PAIR(8));
 			avanzar=getch();
-			Combate(cargar_p(),cargar_o());
 		}
 	}
 	endwin();
 	return 0;
 }
-Pokemon cargar_p(){
-	Pokemon p;
-	ifstream input("player", ios::binary);
-	input.read(reinterpret_cast<char*>(&p), sizeof(p));
-	input.close();
-	mvprintw(0,0,"%d",p.getVida());
-	getch();
-	return p;
+int cargar (int pok){
+	if(pok==1){
+		string line;
+		ifstream mfile ("fuego.txt");
+		if (mfile.is_open())
+		{
+			getline(mfile,line);
+			mfile.close();
+		}
+		return atoi(line.c_str());
+	}else if(pok==2){
+		string line;
+		ifstream mfile ("agua.txt");
+		if (mfile.is_open())
+		{
+			getline(mfile,line);
+			mfile.close();
+		}
+		return atoi(line.c_str());
+	}else{
+		string line;
+		ifstream mfile ("hoja.txt");
+		if (mfile.is_open())
+		{
+			getline(mfile,line);
+			mfile.close();
+		}
+		return atoi(line.c_str());
+	}
 }
-Pokemon cargar_o(){
-	Pokemon t;
-	ifstream inpu("cpu", ios::binary);
-	inpu.read(reinterpret_cast<char*>(&t), sizeof(t));
-	inpu.close();
-	return t;
-}
-void guardar(Pokemon player,Pokemon cpu){
-	ofstream output("player", ios::binary);
-	output.write(reinterpret_cast<char*>(&player), sizeof(player));
-	output.close();
-	ofstream outpu("cpu", ios::binary);
-	outpu.write(reinterpret_cast<char*>(&cpu), sizeof(cpu));
-	outpu.close();
+void guardar(int pok){
+	if(pok==1){
+		int x=cargar(pok)+1;
+		ofstream mfile;
+		mfile.open("fuego.txt",std::ios::trunc);
+		mfile << x;
+		mfile.close();
+
+	}else if(pok==2){
+		int x=cargar(pok)+1;
+		ofstream mfile;
+		mfile.open("agua.txt",std::ios::trunc);
+		mfile << x;
+		mfile.close();
+	}else{
+		int x=cargar(pok)+1;
+		ofstream mfile;
+		mfile.open("hoja.txt",std::ios::trunc);
+		mfile << x;
+		mfile.close();
+	}
+
 }
 int efectividad(string pokemon,string move){
 	int x,y;
@@ -501,7 +538,6 @@ void Combate(Pokemon player,Pokemon cpu){
 				mvprintw(20,(y/2)-30,"             Que Desea hacer ahora?                                                ");
 				mvprintw(21,(y/2)-30,"             0-Continuar el Combate");
 				mvprintw(22,(y/2)-30,"             1-Terminar el Combate");
-				mvprintw(23,(y/2)-30,"             2-Guardar el Combate");
 				avanzar=getch();
 				if((avanzar-48)==0){
 					control2=1;
@@ -509,10 +545,6 @@ void Combate(Pokemon player,Pokemon cpu){
 				{
 					control2=1;
 					control=3;
-				}else if ((avanzar-48)==2)
-				{
-					control2=1;
-					control=4;
 				}
 				attroff(COLOR_PAIR(8));
 				}
@@ -709,7 +741,6 @@ void Combate(Pokemon player,Pokemon cpu){
 					mvprintw(20,(y/2)-30,"                    Que Desea hacer ahora?                               ");
 					mvprintw(21,(y/2)-30,"                    0-Continuar el Combate");
 					mvprintw(22,(y/2)-30,"                    1-Terminar el Combate");
-					mvprintw(23,(y/2)-30,"                    2-Guardar el Combate");
 					avanzar=getch();
 					if((avanzar-48)==0){
 						control2=1;
@@ -717,10 +748,6 @@ void Combate(Pokemon player,Pokemon cpu){
 					{
 						control2=1;
 						control=3;
-					}else if ((avanzar-48)==2)
-					{
-						control2=1;
-						control=4;
 					}
 				}
 				attroff(COLOR_PAIR(8));
@@ -740,6 +767,13 @@ void Combate(Pokemon player,Pokemon cpu){
 		attron(COLOR_PAIR(8));
 		mvprintw(0,(y/2)-20,"(presione cualquier tecla para continuar)");
 		mvprintw(1,(y/2)-10,"!FELICIDADES HAS GANADO!");
+		if(player.getNombre()=="Charmeleon"){
+			guardar(1);
+		}else if(player.getNombre()=="Frogadier"){
+			guardar(2);
+		}else{
+			guardar(3);
+		}
 		attroff(COLOR_PAIR(8));
 		avanzar=getch();
 	}else if(control==2){
@@ -750,9 +784,16 @@ void Combate(Pokemon player,Pokemon cpu){
 		attron(COLOR_PAIR(8));
 		mvprintw(0,(y/2)-20,"(presione cualquier tecla para continuar)");
 		mvprintw(1,(y/2)-15,"DERROTA,MEJOR SUERTE LA PROXIMA");
+		if(cpu.getNombre()=="Charmeleon"){
+			guardar(1);
+		}else if(cpu.getNombre()=="Frogadier"){
+			guardar(2);
+		}else{
+			guardar(3);
+		}
 		attroff(COLOR_PAIR(8));
 		avanzar=getch();	
-	}else if(control==3){
+	}else{
 		attron(COLOR_PAIR(2));
 		limpiar();
 		attroff(COLOR_PAIR(2));
@@ -762,17 +803,6 @@ void Combate(Pokemon player,Pokemon cpu){
 		mvprintw(1,(y/2)-10,"EL combate a terminado");
 		attroff(COLOR_PAIR(8));
 		avanzar=getch();			
-	}else{
-		attron(COLOR_PAIR(2));
-		limpiar();
-		attroff(COLOR_PAIR(2));
-		pokebola(5);
-		attron(COLOR_PAIR(8));
-		guardar(player,cpu);
-		mvprintw(0,(y/2)-20,"(presione cualquier tecla para continuar)");
-		mvprintw(1,(y/2)-25,"EL combate ha sido guardado, te esperamos para continuar ;)");
-		attroff(COLOR_PAIR(8));
-		avanzar=getch();		
 	}
 }
 vector<Move*> oponent_moves(string tipo){
