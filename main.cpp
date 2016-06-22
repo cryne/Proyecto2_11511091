@@ -54,6 +54,7 @@ int main(int argc, char const *argv[])
 	attroff(COLOR_PAIR(2));
 	int s,enter,avanzar;
 	printw("Presione cualquier tecla diferente ESC para iniciar el programa");
+	mvprintw(1,0,"Se le solicita al usuario que antes de iniciar con el uso de este programa tenga la terminal maximizada");
 	while((s=getch()!=27)){
 		attron(COLOR_PAIR(2));
 		limpiar();
@@ -99,7 +100,7 @@ int main(int argc, char const *argv[])
 					player=Pokemon(pokemons[elegido-48]);
 					pokemons.erase(pokemons.begin()+(elegido-48));
 					mvprintw(0,(y/2)-20,"(presione cualquier tecla para continuar)");
-					mvprintw(20,(y/2)-20,"Usted a elegido a %s como su combatiente                                                             ",player.getNombre().c_str());	
+					mvprintw(20,(y/2)-20,"Usted a elegido a %s como su Pokemon                                                              ",player.getNombre().c_str());	
 					mvprintw(21,(y/2)-26,"                                                                                  ");
 					revision=0;
 					avanzar=getch();
@@ -130,8 +131,9 @@ int main(int argc, char const *argv[])
 				mvprintw(0,(y/2)-20,"(presione cualquier tecla para continuar)");
 				for (int i = 0; i < moves.size(); ++i)
 				{	
-					mvprintw(22+(i)*2,(y/2)-8,"%d-%s",i,moves[i]->toString().c_str());
-					mvprintw(23+(i)*2,(y/2)-8,"   Precision:%d  Usos:%d",moves[i]->getPrecision(),moves[i]->getUsos());
+					mvprintw(22+(i)*3,(y/2)-26,"%d-%s",i,moves[i]->toString().c_str());
+					mvprintw(23+(i)*3,(y/2)-26,"   Precision:%d  Usos:%d",moves[i]->getPrecision(),moves[i]->getUsos());
+					mvprintw(24+(i)*3,(y/2)-26,"Descripcion: %s",moves[i]->getDescripcion().c_str());
 				}
 				mvprintw(20,(y/2)-20,"Que movimiento desea elegir para que su pokemon lo aprenda?");
 				mvprintw(21,(y/2)-26,"(presione la tecla del numero del movimiento que desea elegir de la lista)");
@@ -167,8 +169,24 @@ int main(int argc, char const *argv[])
 			attroff(COLOR_PAIR(2));
 			pokebola(5);
 			attron(COLOR_PAIR(8));
-			mvprintw(20,(y/2)-30,"Registro de victorias: Charmeleon:%d   Frogadier:%d    Grovyle:%d",cargar(1),cargar(2),cargar(3));
-			mvprintw(21,(y/2)-26,"                                                                                  ");
+			mvprintw(0,(y/2)-25,"BIENVENIDO ENTRENADOR AL COMBATE POKEMON");
+			mvprintw(1,(y/2)-30,"Registro de victorias: Charmeleon:%d   Frogadier:%d    Grovyle:%d",cargar(1),cargar(2),cargar(3));
+			mvprintw(21,(y/2)-8,"Instrucciones");
+			mvprintw(22,(y/2)-26,"-antes de iniciar el combate tendra que elegir 1 pokemon de los tres posibles");
+			mvprintw(23,(y/2)-26,"-usted elegira los ataques de su pokemon");
+			mvprintw(24,(y/2)-26,"-cada pokemon como sus ataques tiene un tipo que sera decisivo para el resultado de la batalla");
+			mvprintw(25,(y/2)-26,"-los tipos son importante para saber que ataque es mas efectivo contra el oponente");
+			mvprintw(26,(y/2)-24,"Ejemplo:");
+			mvprintw(27,(y/2)-24,"*Fuego->Fuerte contra:Hoja  Debil contra: Agua y Roca" );
+			mvprintw(28,(y/2)-24,"*Agua->Fuerte contra:Fuego  Debil contra: Hoja y Electrico" );
+			mvprintw(29,(y/2)-24,"*Hoja->Fuerte contra:Agua  Debil contra: Fuego y Volador" );
+			mvprintw(30,(y/2)-26,"-una vez iniciado el combate sera por turnos ,el pokemon con mayor Velocidad atacara siempre primero");
+			mvprintw(31,(y/2)-26,"-cuando alguno de los dos pokemon use el movimiento protec en ese turno no importara la Velocidad y el lo hara primero");
+			mvprintw(32,(y/2)-26,"-Es posible que cuando use unos de sus movimiento pueda fallar dependiendo de sus Precision");
+			mvprintw(33,(y/2)-26,"-Cada movimiento posee cierta cantidad de usos y se gastan aunque falle al usarlo");
+			mvprintw(34,(y/2)-26,"-cuando un pokemon ya ha agotado los usos de todos sus movimientos hara un movimiento llamado Struggle");
+			mvprintw(35,(y/2)-26,"-Struggle es un ataque que todo pokemon posee ,pero al usarlo hace efecto tanto en el oponente como en el pokemon que lo uso");
+			mvprintw(36,(y/2)-26,"-El combate termina hasta que cualquiera de los dos pokemon se quede sin puntos de vida o el usuario decida terminar el combate");
 			attroff(COLOR_PAIR(8));
 			avanzar=getch();
 		}
